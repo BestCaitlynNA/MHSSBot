@@ -15,3 +15,7 @@ Randomly pick screenshot for auditing
 
 Admins:
 Query bot for people missing MH screenshots
+
+Limitations:
+Full-screen screenshots with minimum resolution around 1920x1080
+No idea if there's a maximum

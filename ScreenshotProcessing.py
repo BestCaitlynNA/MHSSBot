@@ -1,6 +1,5 @@
-import asyncio
-#import urllib2
 import requests
+from PIL import Image
 
 def receive(message):
     return_message = "received message, but no image"
@@ -20,4 +19,13 @@ def download_image(url):
     r = requests.get(url)
     with open('image.png', 'wb') as f:
         f.write(r.content)
+    convert_png_to_jpg('image.png')
     print("Done downloading image: " + url)
+
+def convert_png_to_jpg(png_filename):
+    img = Image.open(png_filename)
+    jpg = img.convert('RGB')
+    jpg.save(png_filename[:-3] + 'jpg')
+
+def process_image(img):
+    pass
