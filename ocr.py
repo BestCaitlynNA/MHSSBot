@@ -16,6 +16,7 @@ filename = args["image"][:-3] + '-300.png'
 width, height = dpi_image.size
 if (width < 500 or height < 500):
     dpi_image = dpi_image.resize((width*3, height*3), Image.ANTIALIAS)
+dpi_image = dpi_image.crop((width*.28, height*.2, width*.81, height*.91))
 dpi_image.save(filename, dpi=(600,600))
 
 #image = cv2.imread(args["image"])
