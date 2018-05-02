@@ -35,5 +35,10 @@ async def on_message(message):
         # if (len(message.attachments) > 0):
         #     print("This message has an attachement")
         #     print("The url is :" + str(message.attachments[0].get('url')))
-        msg = ScreenshotProcessing.receive(message)
+        img_url = ScreenshotProcessing.receive(message)
+        filename = ScreenshotProcessing.download_image(img_url)
+        ocr_text = ScreenshotProcessing.ocr(filename)
+        #print(ocr_text)
+        ScreenshotProcessing.parse_ocr(ocr_text)
+        msg = "Image received".format(message)
         await client.send_message(message.channel, msg)
