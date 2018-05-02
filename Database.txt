@@ -1,0 +1,16 @@
+Document for planning database
+
+MonsterHunt
+===========
+MonsterHuntHash(ID) - MHH | Date |
+------------------------- +------+
+
+UserMonsterHunt
+===============
+User (ID) | MHH |
+----------+-----+
+
+UserAudit
+=========
+User (ID) | Audit |
+----------+-------+
