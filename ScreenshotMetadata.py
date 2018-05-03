@@ -20,7 +20,7 @@ class ScreenshotMetadata:
         and (self.date         is not None) \
         and (self.time         is not None) \
         and (self.monster_name is not None) \
-        and (self.defeated = True)# and self.defeated == True)
+        and (self.defeated == True)# and self.defeated == True)
 
     def __str__(self):
         string = 'K: ' + self.kingdom  \

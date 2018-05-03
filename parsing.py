@@ -48,6 +48,13 @@ def extract_level(entry):
     level = re.split(level_regex, entry)[1][-1:]
     return level
 
+def extract_monster(entry):
+    level_regex = r"(Lv [1-5] )"
+    date_regex = r"( [0-1][0-9]/[0-3][0-9]/[0-9][0-9])"
+    monster = re.split(level_regex, entry)[2]
+    monster = re.split(date_regex, monster)[0]
+    return monster
+
 def extract_date(entry):
     date_regex = r"([0-1][0-9]/[0-3][0-9]/[0-9][0-9])"
     date = re.split(date_regex, entry)[1]
@@ -69,6 +76,7 @@ if __name__ == '__main__':
     print(extract_y(matches[0]))
     print(extract_defeated(matches[0]))
     print(extract_level(matches[0]))
+    print(extract_monster(matches[0]))
     print(extract_date(matches[0]))
     print(extract_time(matches[0]))
     #print(ss1_string)
