@@ -6,6 +6,7 @@ import cv2
 import os
 
 import ScreenshotMetadata
+import OCRParsing
 
 def receive(message):
     return_message = "received message, but no image"
@@ -61,4 +62,5 @@ def parse_ocr(ocr_text):
     metadata = ScreenshotMetadata()
     for i in range(len(ocr_text_split)):
         pass
-    print(ocr_text_split)
+    ocr_text_string = " ".join(ocr_text_split)
+    valid_hunts = OCRParsing.get_valid_hunts(ocr_text_string)

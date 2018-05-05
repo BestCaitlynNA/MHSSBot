@@ -6,7 +6,8 @@ import ScreenshotMetadata
 import Monsters
 
 screenshot1 = ['K2163', 'X1299', 'Y:447', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Grim', 'Reaper', '04/29/18', '13:43:09', '‘', '%', 'K2163', 'X2309','Y:437', 'Monster', 'Hunt','Defeated', 'Lv', '2', 'Grim', 'Reaper', '04/29/18', '06:51:16', '%', 'K2163', 'X2299', 'Y:415', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Mega', 'Maggot', '04/28/18', '22:00:38', '%', 'K2163', 'X2279', 'Y:423', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Mega', 'Maggot', '04/28/18', '14:34:52', '%', 'K2163', 'X:299', 'Y:425', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Blackwing', '04/28/18', '12:12:11', 'S', '4,?']
-screenshot2 = ['K2163', 'X1299', 'Y:447', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Grim', 'Reaper', '04/29/18', '13:43:09', '‘', '%', 'K2163', 'X2309', 'Y:437', 'Monster', 'Hunt','Defeated', 'Lv', '2', 'Grim', 'Reaper', '04/29/18', '06:51:16', '%', 'K2163', 'X2299', 'Y:415', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Mega', 'Maggot', '04/28/18', '22:00:38', '%', 'K2163', 'X2279', 'Y:423', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Mega', 'Maggot', '04/28/18', '14:34:52', '%', 'K2163', 'X:299', 'Y:425', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Blackwing', '04/28/18', '12:12:11', 'S', '4,?']
+screenshot2 = ['K2163', 'X2288', 'Y2434', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Queen', 'Bee', '05/01/18', '16:27:38', '%', 'K2163', 'X2303', 'Y2431', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Saberfang', '05/01/18', '16:25:28', '%', 'K2163', 'X2326', 'Y:426', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Queen', 'Bee', '05/01/18', '05:43:16', '%', 'K2163', 'X2291', 'Y:417', 'Monster', 'Hunt', 'Defeated', 'Lv', '2', 'Saberfang', '05/01/18', '05:41:53', '%', 'K2163', 'X2301', 'Y:423', 'Monster', 'Hunt', 'Defeated', 'LV', '2', 'Queen', 'Bee', '04/30/18', '18:15:10']
+
 
 # def Init_MHSSMD():
 #     return ScreenshotMetadata()
@@ -25,7 +26,7 @@ def extract_kingdom(entry):
 # Expected
 # 163 X2309 Y:437 Monster Hunt Defeated Lv 2 Grim Reaper 04/29/18 06:51:16 %
 def extract_x(entry):
-    x_regex = r"( X[0-9]|X[:])"
+    x_regex = r"(X[0-9]|X[:])"
     y_regex = r"( Y[0-9]|Y[:])"
     x_coordinate = re.split(x_regex, entry)[2]
     x_coordinate = re.split(y_regex, x_coordinate)[0][:-1]
@@ -66,7 +67,7 @@ def extract_time(entry):
     return time
 
 if __name__ == '__main__':
-    ss1_string = " ".join(screenshot2)
+    ss1_string = " ".join(screenshot1)
     matches = extract_entry(ss1_string)
     print(ss1_string)
     for match in matches:

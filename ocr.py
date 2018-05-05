@@ -45,7 +45,7 @@ cv2.imwrite(filename, gray)
 
 text = pytesseract.image_to_string(Image.open(filename))
 os.remove(filename)
-print(text)
+print(text.split())
 
 cv2.imshow("Image", image)
 cv2.imshow("Output", gray)

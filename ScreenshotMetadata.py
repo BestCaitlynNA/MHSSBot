@@ -1,13 +1,13 @@
 class ScreenshotMetadata:
-    def __init__(self):
-        self.kingdom = None
-        self.x = None
-        self.y = None
-        self.level = None
-        self.date = None
-        self.time = None
-        self.monster_name = None
-        self.defeated = False
+    def __init__(self, kingdom = None, x = None, y = None, level = None, date = None, monster_name = None, defeated = None):
+        self.kingdom = kingdom
+        self.x = x
+        self.y = y
+        self.level = level
+        self.date = date
+        self.time = time
+        self.monster_name = monster_name
+        self.defeated = defeated
 
     def Hash(self):
         return

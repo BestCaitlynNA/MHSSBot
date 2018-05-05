@@ -7,10 +7,16 @@ MonsterHuntHash(ID) - MHH | Date |
 
 UserMonsterHunt
 ===============
-User (ID) | MHH |
-----------+-----+
+User (Primary key) | MHH (key) | Date |
+-------------------+-----------+------+
 
 UserAudit
 =========
 User (ID) | Audit |
 ----------+-------+
+
+Hash MH -> check if it's in database
+if true:
+    return duplicate error
+if false:
+    insert into database
