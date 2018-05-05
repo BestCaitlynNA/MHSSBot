@@ -64,3 +64,4 @@ def parse_ocr(ocr_text):
         pass
     ocr_text_string = " ".join(ocr_text_split)
     valid_hunts = OCRParsing.get_valid_hunts(ocr_text_string)
+    return valid_hunts
