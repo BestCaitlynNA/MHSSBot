@@ -7,7 +7,7 @@ import Database
 
 def create_database(cnx):
     try:
-        command = "CREATE DATABASE IF NOT EXISTS {};".format(secret.db_name)
+        command = "CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARSET=UTF8;".format(secret.db_name)
         cnx.cursor().execute(command)
     except MySQLdb.Error as err:
         print("Failed creating database: {}".format(err))
@@ -17,7 +17,7 @@ def create_tables(cnx):
     try:
         command = "CREATE TABLE IF NOT EXISTS " + Database.tables[0] +" ("    \
             + "User_id VARCHAR(20) NOT NULL,"                                \
-            + "MonsterHuntHash VARCHAR(20) NOT NULL UNIQUE PRIMARY KEY,"     \
+            + "MonsterHuntHash VARCHAR(64) NOT NULL UNIQUE PRIMARY KEY,"     \
             + "KillTime DATE NOT NULL"                               \
         + ");"
         cnx.cursor().execute(command)
@@ -28,7 +28,7 @@ def create_tables(cnx):
         cnx.cursor().execute(command)
         command = "CREATE TABLE IF NOT EXISTS " + Database.tables[2] + " (   \
             User_id VARCHAR(20) UNIQUE PRIMARY KEY,                      \
-            User VARCHAR(32)                                       \
+            User VARCHAR(36)                                       \
         );"
         cnx.cursor().execute(command)
     except MySQLdb.Error as err:
@@ -44,6 +44,14 @@ def delete_tables(cnx):
         print("Failed to delete table: {}".format(err))
         cnx.close()
 
+def delete_database(cnx):
+    try:
+        command = 'DROP DATABASE IF EXISTS ' + secret.db_name + ';'
+        cnx.cursor().execute(command)
+    except MySQLdb.Error as err:
+        print("Failed to delete database: {}".format(err))
+        cnx.close()
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set up database.')
     parser.add_argument('--create', '-c', action='store_true')
@@ -52,8 +60,10 @@ if __name__ == '__main__':
     cnx = Database.connect_to_server()
     if args.create:
         create_database(cnx)
+        command = 'USE ' + secret.db_name + ';'
+        cnx.cursor().execute(command)
         create_tables(cnx)
     if args.delete:
-        delete_tables(cnx)
+        delete_database(cnx)
     Database.finalize(cnx)
     exit(1)

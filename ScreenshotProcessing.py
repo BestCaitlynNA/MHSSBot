@@ -59,7 +59,7 @@ def parse_ocr(ocr_text):
     ocr_text_split = ocr_text.split()
     seen_coords = False
     mh_list = []
-    metadata = ScreenshotMetadata()
+    metadata = ScreenshotMetadata.ScreenshotMetadata()
     for i in range(len(ocr_text_split)):
         pass
     ocr_text_string = " ".join(ocr_text_split)

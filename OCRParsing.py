@@ -1,6 +1,7 @@
 import re
 
 import ScreenshotMetadata
+import Monsters
 
 def extract_entry(entries):
     entry_regex = r"(K[0-9]|K[:])"
@@ -35,12 +36,12 @@ def extract_defeated(entry):
     return validate_defeated(defeated)
 
 def extract_level(entry):
-    level_regex = r"(Lv [1-5])"
-    level = re.split(level_regex, entry)[1][-1:]
+    level_regex = r"(Lv [1-5]|LV [1-5])"
+    level = re.split(level_regex, entry)[1][3]
     return validate_number(level)
 
 def extract_monster(entry):
-    level_regex = r"(Lv [1-5] )"
+    level_regex = r"(Lv [1-5] |LV [1-5] )"
     date_regex = r"( [0-1][0-9]/[0-3][0-9]/[0-9][0-9])"
     monster = re.split(level_regex, entry)[2]
     monster = re.split(date_regex, monster)[0]
@@ -52,8 +53,9 @@ def extract_date(entry):
     return date
 
 def extract_time(entry):
-    time_regex = r"([0-2][0-9]:[0-5][0-9]:[0-5][0-9])"
+    time_regex = r"([0-2][0-9](:|2)[0-5][0-9](:|2)[0-5][0-9])"
     time = re.split(time_regex, entry)[1]
+    time = time[0:2] + ":" + time[3:5] + ":" + time[6:]
     return time
 
 def validate_monster(monster):
@@ -65,13 +67,16 @@ def validate_number(number):
         return number
 
 def validate_defeated(defeated):
-    if defeated.strip() is 'Defeated':
-        return 'Defeated'
+    if defeated.strip() == 'Defeated':
+        return True
+    return False
 
+#returns list of ScreenshotMetadata
 def get_valid_hunts(ocr_text_string):
     entries = extract_entry(ocr_text_string)
     valid_hunts = []
     for entry in entries:
+        #print(entry)
         kingdom = extract_kingdom(entry)
         x = extract_x(entry)
         y = extract_y(entry)
@@ -80,7 +85,16 @@ def get_valid_hunts(ocr_text_string):
         monster = extract_monster(entry)
         date = extract_date(entry)
         time = extract_time(entry)
+        # print('Kingdom: ', kingdom)
+        # print('X: ', x)
+        # print('Y: ', y)
+        # print('Level: ', level)
+        # print('Defeated: ', defeated)
+        # print('Monster: ', monster)
+        # print('Date: ', date)
+        # print('Time: ', time)
         ssmd = ScreenshotMetadata.ScreenshotMetadata(kingdom, x, y, level, date, time, monster, defeated)
         if ssmd.Completed():
             valid_hunts.append(ssmd)
+    print("Num valid hunts: ", len(valid_hunts))
     return valid_hunts

@@ -47,6 +47,7 @@ def extract_defeated(entry):
 def extract_level(entry):
     level_regex = r"(Lv [1-5])"
     level = re.split(level_regex, entry)[1][-1:]
+    print('length: ',len(level))
     return level
 
 def extract_monster(entry):
