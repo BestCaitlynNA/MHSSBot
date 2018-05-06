@@ -12,6 +12,7 @@ import ScreenshotProcessing
 import Database
 import Roles
 import Utility
+import MHSSException
 
 client = discord.Client()
 cnx = Database.connect_to_server_with_db()
@@ -44,7 +45,7 @@ def get_all_users():
             for member in server.members:
                 if (type(member.roles) != str):
                     member.roles = [role.name for role in member.roles]
-                if not set(member.roles).isdisjoint(Roles.valid_roles):
+                if not Utility.check_overlapping_sets(member.roles, Roles.valid_roles):
                     users.append((str(member.name) + '#' + str(member.discriminator), member.id))
     usernames = [user[0] for user in users]
     user_ids = [user[1] for user in users]
@@ -86,46 +87,73 @@ async def on_message(message):
 
     # for testing only
     #print(user_id, secret.tester_id)
-    if user_id != secret.tester_id:
-        return
+    # if user_id != secret.tester_id:
+    #     return
 
     # Don't reply to own messages
     if message.author == client.user:
         return
 
+    if message.content.startswith("$help"):
+        if not Utility.accept_command(message):
+            return
+        msg = '$help - Display this help message.\n'
+        msg += '$ss - Submit a screenshot. Only accepts full screen screenshots as attachment for now.\n'
+        msg += '$update_users(DG1_R4 only) - Pull full user list into database.\n'
+        msg += "$check_mh (start date)ddmmyyyy (end date)ddmmyyy (DG1_R4 only)- Get list of users that haven't met the requirement in the time period.\n"
+        msg = msg.format(message)
+        await client.send_message(message.channel, msg)
+
     if message.content.startswith("$hello"):
+        if not Utility.accept_command(message):
+            return
         msg = 'Hello {0.author.mention}'.format(message)
         await client.send_message(message.channel, msg)
 
     if message.content.startswith("$ss"):
+        if not Utility.accept_command(message):
+            return
         img_url = ScreenshotProcessing.receive(message)
+        if img_url is None:
+            msg = "No image detected.".format(message)
+            await client.send_message(message.channel, msg)
         filename = ScreenshotProcessing.download_image(img_url)
         ocr_text = ScreenshotProcessing.ocr(filename)
-        valid_hunts = ScreenshotProcessing.parse_ocr(ocr_text)
-        insert_monster_hunt_into_db(user_id, valid_hunts)
+        valid_hunts = []
+        try:
+            valid_hunts = ScreenshotProcessing.parse_ocr(ocr_text)
+            if len(valid_hunts) > 0:
+                insert_monster_hunt_into_db(user_id, valid_hunts)
+        except MHSSException.MHSSException as err:
+            msg = err.message.format(message)
+            await client.send_message(message.channel, msg)
         #Database.update_user(cnx, str(message.author.id), str(message.author))
         msg = "Image received".format(message)
         await client.send_message(message.channel, msg)
+        msg = "Number of valid hunts detected: {}".format(len(valid_hunts))
+        msg = msg.format(message)
+        await client.send_message(message.channel, msg)
 
     if message.content.startswith("$update_users"):
+        if not Utility.check_overlapping_sets(message.author.roles, Roles.admin_roles):
+            return
         get_all_users()
 
     if message.content.startswith("$check_mh"):
         command_length = len("$check_mh")
-        #print(start_date)
-        #print(end_date)
-        # print(len(message.content))
+        if not Utility.check_overlapping_sets(message.author.roles, Roles.admin_roles):
+            return
         if len(message.content) != 27:
             msg = "Usage is $check_mh ddmmyyyy(start) ddmmyyyy(end)"
             await client.send_message(message.channel, msg)
             return
         start_date = message.content[command_length+1:command_length + 9]
         end_date = message.content[command_length+10: command_length+18]
+        if not Utility.validate_dates(start_date, end_date):
+            msg = 'End date must occur after start date'.format(message)
+            await client.send_message(message.channel, msg)
         failed_users =  Utility.get_failed_mh_users(cnx, start_date, end_date)
         failed_users_list = textwrap.wrap(str(failed_users), 1000)
         for failed_user in failed_users_list:
             msg = failed_user.format(message)
             await client.send_message(message.channel, msg)
-
-def validate_dates():
-    pass

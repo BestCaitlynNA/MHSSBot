@@ -47,7 +47,6 @@ Pull all users in db
 """
 def check_user_requirements(cnx, start_date, end_date):
     try:
-        # isolated_list = "SELECT monster_hunt.User_id as User_id, count(monster_hunt.MonsterHuntHash) as Tally FROM monster_hunt WHERE KillTime BETWEEN '" + start_date + "' and '" + end_date + "' GROUP BY monster_hunt.User_id"
         command = "SELECT user_id.User, monster_hunt_count.Tally FROM        (SELECT monster_hunt.User_id as User_id, count(monster_hunt.MonsterHuntHash) as Tally FROM monster_hunt WHERE KillTime BETWEEN '" + start_date + "' and '" + end_date + "' GROUP BY monster_hunt.User_id) as monster_hunt_count RIGHT JOIN user_id ON monster_hunt_count.User_id = user_id.User_id;"
         cursor = cnx.cursor()
         cursor.execute(command)

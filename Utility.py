@@ -1,6 +1,7 @@
 import datetime
 
 import Database
+import Roles
 
 def convert_string_to_date(date_string):
     return datetime.datetime.strptime(date_string, "%d%m%Y").date()
@@ -25,3 +26,14 @@ def get_failed_mh_users(cnx, start_date_string, end_date_string):
     # for row in rows:
     #     if row[1] < mh_requirement:
     #         failed.append(row)
+
+def check_overlapping_sets(set1, set2):
+    return not set(set1).isdisjoint(set2)
+
+def validate_dates(start_date_string, end_date_string):
+    return (get_mh_requirement(start_date_string, end_date_string) > 0)
+
+def accept_command(message):
+    if (type(message.author.roles[0]) != str):
+        message.author.roles = [role.name for role in message.author.roles]
+    return check_overlapping_sets(message.author.roles, Roles.valid_roles)

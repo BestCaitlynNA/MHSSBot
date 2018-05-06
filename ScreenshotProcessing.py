@@ -7,6 +7,7 @@ import os
 
 import ScreenshotMetadata
 import OCRParsing
+import MHSSException
 
 def receive(message):
     return_message = "received message, but no image"
@@ -41,7 +42,7 @@ def ocr(img):
     width, height = dpi_image.size
     if (width < 500 or height < 500):
         dpi_image = dpi_image.resize((width*3, height*3), Image.ANTIALIAS)
-    dpi_image = dpi_image.crop((width*.28, height*.2, width*.81, height*.91))
+    dpi_image = dpi_image.crop((width*.28, height*.2, width*.81, height*.95))
     dpi_image.save(filename, dpi=(600,600))
 
     image = cv2.imread(filename)
@@ -63,5 +64,8 @@ def parse_ocr(ocr_text):
     for i in range(len(ocr_text_split)):
         pass
     ocr_text_string = " ".join(ocr_text_split)
-    valid_hunts = OCRParsing.get_valid_hunts(ocr_text_string)
-    return valid_hunts
+    try:
+        valid_hunts = OCRParsing.get_valid_hunts(ocr_text_string)
+        return valid_hunts
+    except MHSSException.MHSSException as err:
+        raise MHSSException.MHSSException(err.message)
