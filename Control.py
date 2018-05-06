@@ -5,6 +5,7 @@ import multiprocessing
 import errno
 import os
 import sys
+import textwrap
 
 import secret
 import ScreenshotProcessing
@@ -81,9 +82,7 @@ def insert_monster_hunt_into_db(user_id, monster_hunt_list):
 
 @client.event
 async def on_message(message):
-    #TODO: get user id and name from message.author
     user_id = message.author.id
-    #print(str(message.author), str(message.author.id))
 
     # for testing only
     #print(user_id, secret.tester_id)
@@ -123,8 +122,10 @@ async def on_message(message):
         start_date = message.content[command_length+1:command_length + 9]
         end_date = message.content[command_length+10: command_length+18]
         failed_users =  Utility.get_failed_mh_users(cnx, start_date, end_date)
-        msg = str(failed_users).format(message)
-        await client.send_message(message.channel, msg)
+        failed_users_list = textwrap.wrap(str(failed_users), 1000)
+        for failed_user in failed_users_list:
+            msg = failed_user.format(message)
+            await client.send_message(message.channel, msg)
 
 def validate_dates():
     pass

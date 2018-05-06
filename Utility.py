@@ -18,9 +18,9 @@ def get_failed_mh_users(cnx, start_date_string, end_date_string):
     start_date = convert_to_db_date(start_date_string)
     end_date = convert_to_db_date(end_date_string)
     rows = Database.check_user_requirements(cnx, start_date, end_date)
-    #print(rows)
-    failed = []
+    rows = [row if (row[1] is not None) else (row[0], 0) for row in rows]
     failed = [row for row in rows if row[1] < mh_requirement]
+    print(failed)
     return failed
     # for row in rows:
     #     if row[1] < mh_requirement:
