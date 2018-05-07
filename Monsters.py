@@ -22,8 +22,9 @@ event_monsters_one_energy = [ \
 'Gem Goblin',      \
 'Goblin',          \
 'Krabby',          \
-'Totemptest',      \
-'Trickstars',      \
+'Totempest',      \
+'Trickstar',      \
+'Troubledough',    \
 'Weevil',          \
 'Undead Ogre',     \
 ]
