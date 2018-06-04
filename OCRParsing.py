@@ -77,31 +77,47 @@ def validate_defeated(defeated):
 
 def create_hunt(entry):
     try:
+        # print("Attempting to create hunt")
         kingdom = extract_kingdom(entry)
+        # print("Kingdom")
         x = extract_x(entry)
+        # print("X")
         y = extract_y(entry)
+        # print("Y")
         defeated = extract_defeated(entry)
+        # print("Defeated")
         level = extract_level(entry)
+        # print("Level")
         monster = extract_monster(entry)
+        # print("Monster")
         date = extract_date(entry)
+        # print("Date")
         time = extract_time(entry)
+        # print("Time")
         ssmd = ScreenshotMetadata.ScreenshotMetadata(kingdom, x, y, level, date, time, monster, defeated)
         if ssmd.Completed():
             return ssmd
+        # print("entry isn't complete:", entry)
+        return None
     except:
-        raise MHSSException.MHSSException('Failed to parse entry')
+        # print("failed to parse", entry)
+        return None #temporary fix - should be able to accept something
+        #raise MHSSException.MHSSException('Failed to parse entry')
 
 #returns list of ScreenshotMetadata
 def get_valid_hunts(ocr_text_string):
     entries = extract_entry(ocr_text_string)
     #print(entries)
     valid_hunts = []
+    invalid_hunts = []
     for i, entry in enumerate(entries):
         #print(entry)
         try:
             hunt = create_hunt(entry)
             if hunt is not None:
                 valid_hunts.append(hunt)
+            else:
+                invalid_hunts.append(i)
         except MHSSException.MHSSException as err:
             raise MHSSException.MHSSException('Failed to parse hunt: {}'.format(i))
 
@@ -114,4 +130,4 @@ def get_valid_hunts(ocr_text_string):
         # print('Date: ', date)
         # print('Time: ', time)
 #    print("Num valid hunts: ", len(valid_hunts))
-    return valid_hunts
+    return valid_hunts, invalid_hunts
